@@ -15,6 +15,7 @@ require 'hoptoad_notifier'
 # * <tt>:notifier</tt> - information to identify the source of the error report
 #
 class ErrorReport
+  binding.pry
   attr_reader :error_class, :message, :request, :server_environment, :api_key,
               :notifier, :user_attributes, :framework, :notice
 
@@ -24,6 +25,7 @@ class ErrorReport
 
   def initialize(xml_or_attributes)
     @attributes = xml_or_attributes
+    # @attributes = Hoptoad.parse_xml!(@attributes) if @attributes.is_a? Hash
     @attributes = Hoptoad.parse_xml!(@attributes) if @attributes.is_a? String
     @attributes = @attributes.with_indifferent_access
     @attributes.each { |k, v| instance_variable_set(:"@#{k}", v) }
@@ -67,8 +69,10 @@ class ErrorReport
   #
   # @return [ Error ]
   def error
+    binding.pry
     @error ||= app.find_or_create_err!(
-      error_class: error_class,
+      # error_class: error_class,
+      error_class: @attributes["errors"][0]["type"],
       environment: rails_env,
       fingerprint: fingerprint
     )
@@ -79,7 +83,8 @@ class ErrorReport
   end
 
   def should_keep?
-    app_version = server_environment['app-version'] || ''
+    app_version = 'js-01' || server_environment['app-version'] || ''
+
     current_version = app.current_app_version
     return true unless current_version.present?
     return false if app_version.length <= 0

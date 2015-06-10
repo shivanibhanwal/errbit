@@ -4,6 +4,9 @@ Rails.application.routes.draw do
 
   # Hoptoad Notifier Routes
   match '/notifier_api/v2/notices' => 'notices#create', via: [:get, :post]
+  # https://airbrake.io/api/v3/projects/[PROJECT_ID]/notices?key=[API_KEY]
+  # match '/api/v3/projects/:project_id/notices' => 'notices#create', via: [ :post]
+
   get '/locate/:id' => 'notices#locate', :as => :locate
   post '/deploys.txt' => 'deploys#create'
 
@@ -57,6 +60,17 @@ Rails.application.routes.draw do
           get :app
         end
       end
+    end
+    namespace :v3 do
+      resources :projects do
+        resources :problems, :only => [:index, :show], :defaults => { :format => 'json' }
+        resources :notices,  :only => [:index, :create], :defaults => { :format => 'json' }
+        resources :stats, :only => [], :defaults => { :format => 'json' } do
+          collection do
+            get :app
+          end
+        end
+    end
     end
   end
 

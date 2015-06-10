@@ -13,6 +13,7 @@ gem 'mongoid_rails_migrations'
 gem 'devise'
 gem 'haml'
 gem 'htmlentities'
+gem 'rack-cors', :require => 'rack/cors' # For CORS
 gem 'rack-ssl', :require => 'rack/ssl'   # force SSL
 
 gem 'useragent'

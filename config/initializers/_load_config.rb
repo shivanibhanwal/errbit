@@ -10,9 +10,9 @@ unless defined?(Errbit::Config)
 
   # If Errbit is running on Heroku, config can be set from environment variables.
   if use_env
-    Errbit::Config.host = ENV['ERRBIT_HOST']
+    Errbit::Config.host = ENV['ERRBIT_HOST'] || "localhost"
     Errbit::Config.protocol = ENV['ERRBIT_PROTOCOL'] || 'http'
-    Errbit::Config.port = ENV['ERRBIT_PORT']
+    Errbit::Config.port = ENV['ERRBIT_PORT'] || 5000
     Errbit::Config.email_from = ENV['ERRBIT_EMAIL_FROM']
     #  Not really easy to use like an env because need an array and ENV return a string :(
     # Errbit::Config.email_at_notices = ENV['ERRBIT_EMAIL_AT_NOTICES']
